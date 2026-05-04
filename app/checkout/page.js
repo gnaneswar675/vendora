@@ -3,14 +3,22 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
+import { useCart } from '@/lib/cart';
+import { createOrder } from '@/lib/api';
 import { motion } from 'framer-motion';
 import { CreditCard, MapPin, CheckCircle2, Lock } from 'lucide-react';
 
 export default function Checkout() {
   const router = useRouter();
-  const { role } = useAuth();
+  const { role, user } = useAuth();
+  const { cartItems, clearCart } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  const shipping = cartItems.length > 0 ? 15.00 : 0;
+  const tax = subtotal * 0.08; // 8% estimated tax
+  const total = subtotal + shipping + tax;
 
   useEffect(() => {
     if (role !== 'buyer') {
@@ -18,17 +26,35 @@ export default function Checkout() {
     }
   }, [role, router]);
 
-  const handleCheckout = (e) => {
+  const handleCheckout = async (e) => {
     e.preventDefault();
     setIsProcessing(true);
-    // Simulate payment processing
-    setTimeout(() => {
+    
+    try {
+      const orderData = {
+        buyerId: user.uid,
+        buyerName: user.name || "Alex Buyer",
+        items: cartItems,
+        total: total,
+        subtotal: subtotal,
+        tax: tax,
+        shipping: shipping,
+        status: "processing",
+      };
+      
+      await createOrder(orderData);
+      
       setIsProcessing(false);
       setIsSuccess(true);
+      clearCart();
       setTimeout(() => {
         router.push('/orders');
       }, 2000);
-    }, 2000);
+    } catch (error) {
+      console.error("Failed to create order:", error);
+      setIsProcessing(false);
+      alert("Checkout failed. Please try again.");
+    }
   };
 
   if (isSuccess) {
@@ -140,56 +166,46 @@ export default function Checkout() {
             <h2 className="text-xl font-bold mb-6 pb-4 border-b border-slate-800">Order Summary</h2>
             
             <div className="space-y-4 mb-6 pb-6 border-b border-slate-800">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-slate-800 rounded-lg overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=500&q=80" alt="Item" className="w-full h-full object-cover" />
+              {cartItems.map((item) => (
+                <div key={item.id} className="flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-slate-800 rounded-lg overflow-hidden">
+                      <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-white line-clamp-1">{item.title}</p>
+                      <p className="text-xs text-slate-400">Qty: {item.quantity}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-white line-clamp-1">Neon Sneakers</p>
-                    <p className="text-xs text-slate-400">Qty: 1</p>
-                  </div>
+                  <span className="font-medium">${(item.price * item.quantity).toFixed(2)}</span>
                 </div>
-                <span className="font-medium">$299.99</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-slate-800 rounded-lg overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1615222629737-67c4ec092289?w=500&q=80" alt="Item" className="w-full h-full object-cover" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-white line-clamp-1">Neural Headset</p>
-                    <p className="text-xs text-slate-400">Qty: 1</p>
-                  </div>
-                </div>
-                <span className="font-medium">$899.99</span>
-              </div>
+              ))}
             </div>
 
             <div className="space-y-3 mb-6 text-sm">
               <div className="flex justify-between text-slate-400">
                 <span>Subtotal</span>
-                <span className="text-white">$1199.98</span>
+                <span className="text-white">${subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-slate-400">
                 <span>Shipping</span>
-                <span className="text-white">$15.00</span>
+                <span className="text-white">${shipping.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-slate-400">
                 <span>Tax</span>
-                <span className="text-white">$96.00</span>
+                <span className="text-white">${tax.toFixed(2)}</span>
               </div>
             </div>
 
             <div className="flex justify-between text-xl font-bold text-white mb-8 pt-4 border-t border-slate-800">
               <span>Total</span>
-              <span className="text-blue-400">$1310.98</span>
+              <span className="text-blue-400">${total.toFixed(2)}</span>
             </div>
 
             <button 
               form="payment-form"
               type="submit"
-              disabled={isProcessing}
+              disabled={isProcessing || cartItems.length === 0}
               className="w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 disabled:cursor-not-allowed text-white font-bold transition-all flex items-center justify-center gap-2 mb-4"
             >
               {isProcessing ? (
@@ -199,7 +215,7 @@ export default function Checkout() {
                 </>
               ) : (
                 <>
-                  <Lock className="h-5 w-5" /> Pay $1310.98
+                  <Lock className="h-5 w-5" /> Pay ${total.toFixed(2)}
                 </>
               )}
             </button>

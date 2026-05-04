@@ -3,28 +3,77 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { useCart } from '@/lib/cart';
-import { getProductById } from '@/lib/api';
+import { getProductById, getProductReviews, addProductReview, getUserOrders } from '@/lib/api';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowLeft, Star, ShoppingCart, ShieldCheck, Truck, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Star, ShoppingCart, ShieldCheck, Truck, RotateCcw, MessageSquare } from 'lucide-react';
 
 export default function ProductDetail() {
   const params = useParams();
   const router = useRouter();
-  const { role } = useAuth();
+  const { role, user } = useAuth();
   const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [reviews, setReviews] = useState([]);
+  const [userHasPurchased, setUserHasPurchased] = useState(false);
+  const [reviewText, setReviewText] = useState("");
+  const [reviewRating, setReviewRating] = useState(5);
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
 
   useEffect(() => {
     if (params.id) {
-      getProductById(params.id).then(data => {
-        setProduct(data);
+      Promise.all([
+        getProductById(params.id),
+        getProductReviews(params.id)
+      ]).then(([productData, reviewsData]) => {
+        setProduct(productData);
+        setReviews(reviewsData);
         setLoading(false);
       });
     }
   }, [params.id]);
+
+  useEffect(() => {
+    if (user && role === 'buyer' && product) {
+      getUserOrders(user.uid).then(orders => {
+        const hasBought = orders.some(order => 
+          order.items.some(item => item.id === product.id)
+        );
+        setUserHasPurchased(hasBought);
+      });
+    }
+  }, [user, role, product]);
+
+  const submitReview = async (e) => {
+    e.preventDefault();
+    if (!reviewText.trim()) return;
+    setIsSubmittingReview(true);
+    try {
+      const reviewData = {
+        userId: user.uid,
+        userName: user.name || "Anonymous Buyer",
+        rating: reviewRating,
+        text: reviewText,
+      };
+      await addProductReview(product.id, reviewData, product.rating, product.reviews);
+      
+      setReviews([{ ...reviewData, id: Date.now().toString(), createdAt: new Date().toISOString() }, ...reviews]);
+      setProduct({
+        ...product,
+        reviews: (product.reviews || 0) + 1,
+        rating: Math.round((((product.rating || 0) * (product.reviews || 0)) + reviewRating) / ((product.reviews || 0) + 1) * 10) / 10
+      });
+      setReviewText("");
+      setReviewRating(5);
+    } catch (error) {
+      console.error("Failed to submit review", error);
+      alert("Failed to submit feedback.");
+    } finally {
+      setIsSubmittingReview(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -166,6 +215,87 @@ export default function ProductDetail() {
             </div>
           </div>
         </motion.div>
+      </div>
+
+      {/* Reviews Section */}
+      <div className="mt-20 border-t border-slate-800 pt-12">
+        <h2 className="text-3xl font-bold mb-8">Customer Feedback</h2>
+        
+        {userHasPurchased && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="glass-card p-6 md:p-8 rounded-3xl border border-slate-700/50 mb-12"
+          >
+            <h3 className="text-xl font-bold mb-4">Leave a Review</h3>
+            <form onSubmit={submitReview} className="space-y-4">
+              <div>
+                <label className="block text-sm text-slate-400 mb-2">Rating</label>
+                <div className="flex gap-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button 
+                      type="button" 
+                      key={star} 
+                      onClick={() => setReviewRating(star)}
+                      className={`h-10 w-10 flex items-center justify-center rounded-xl border ${reviewRating >= star ? 'border-yellow-500 bg-yellow-500/10 text-yellow-500' : 'border-slate-700 bg-slate-800/50 text-slate-500'} transition-colors`}
+                    >
+                      <Star className="h-5 w-5 fill-current" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm text-slate-400 mb-2">Your Feedback</label>
+                <textarea 
+                  value={reviewText}
+                  onChange={(e) => setReviewText(e.target.value)}
+                  placeholder="What did you think of this product?" 
+                  className="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-3 px-4 text-white focus:border-blue-500 outline-none min-h-[100px]"
+                  required
+                />
+              </div>
+              <button 
+                type="submit" 
+                disabled={isSubmittingReview}
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors disabled:opacity-50"
+              >
+                {isSubmittingReview ? 'Submitting...' : 'Submit Feedback'}
+              </button>
+            </form>
+          </motion.div>
+        )}
+
+        <div className="space-y-6">
+          {reviews.length === 0 ? (
+            <div className="text-center py-12 glass-card rounded-2xl border border-slate-700/50">
+              <MessageSquare className="h-12 w-12 text-slate-500 mx-auto mb-4" />
+              <p className="text-slate-400">No feedback yet. Be the first to share your thoughts!</p>
+            </div>
+          ) : (
+            reviews.map((review, i) => (
+              <motion.div 
+                key={review.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="glass-card p-6 rounded-2xl border border-slate-700/50"
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h4 className="font-bold text-white">{review.userName}</h4>
+                    <p className="text-xs text-slate-400">{new Date(review.createdAt).toLocaleDateString()}</p>
+                  </div>
+                  <div className="flex gap-1 text-yellow-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className={`h-4 w-4 ${i < review.rating ? 'fill-current' : 'text-slate-700'}`} />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-slate-300">{review.text}</p>
+              </motion.div>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

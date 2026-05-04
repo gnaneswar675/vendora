@@ -24,38 +24,41 @@ export default function Navbar() {
 
   return (
     <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-slate-900/95 backdrop-blur-xl border-b border-slate-800 shadow-xl py-3' : 'bg-transparent py-5'}`}>
-      <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
-        <div className="flex items-center gap-8">
-          <Link href="/" className="text-2xl font-bold tracking-tighter text-white">
-            VEND<span className="text-blue-500">ORA</span>
-          </Link>
-          <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
-            <Link href="/" className="hover:text-white transition-colors">Home</Link>
-            
-            {(!role || role === 'buyer') && (
-              <>
-                <Link href="/shop" className="hover:text-white transition-colors">Shop</Link>
-                <Link href="/#features" className="hover:text-white transition-colors">Features</Link>
-                {!role && <Link href="/sign-up?role=vendor" className="hover:text-white transition-colors">Become a Seller</Link>}
-              </>
-            )}
+      <div className="container mx-auto px-4 md:px-6 flex items-center justify-between relative">
+        <Link href="/" className="text-2xl font-bold tracking-tighter text-white z-10 shrink-0">
+          VEND<span className="text-blue-500">ORA</span>
+        </Link>
+        
+        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-8 text-sm font-medium text-slate-300 w-max">
+          <Link href="/" className="hover:text-white transition-colors">Home</Link>
+          
+          {(!role || role === 'buyer') && (
+            <>
+              <Link href="/shop" className="hover:text-white transition-colors">Shop</Link>
+              {!role && (
+                <>
+                  <Link href="/#features" className="hover:text-white transition-colors">Features</Link>
+                  <Link href="/sign-up?role=vendor" className="hover:text-white transition-colors">Become a Seller</Link>
+                </>
+              )}
+            </>
+          )}
 
-            {role === 'vendor' && (
-              <>
-                <Link href="/vendor/dashboard" className="hover:text-white transition-colors">Dashboard</Link>
-                <Link href="/vendor/products" className="hover:text-white transition-colors">Products</Link>
-                <Link href="/vendor/orders" className="hover:text-white transition-colors">Orders</Link>
-                <Link href="/vendor/analytics" className="hover:text-white transition-colors">Analytics</Link>
-              </>
-            )}
+          {role === 'vendor' && (
+            <>
+              <Link href="/vendor/dashboard" className="hover:text-white transition-colors">Dashboard</Link>
+              <Link href="/vendor/products" className="hover:text-white transition-colors">Products</Link>
+              <Link href="/vendor/orders" className="hover:text-white transition-colors">Orders</Link>
+              <Link href="/vendor/analytics" className="hover:text-white transition-colors">Analytics</Link>
+            </>
+          )}
 
-            {role === 'admin' && (
-              <Link href="/admin/dashboard" className="hover:text-white transition-colors">Admin Dashboard</Link>
-            )}
-          </div>
+          {role === 'admin' && (
+            <Link href="/admin/dashboard" className="hover:text-white transition-colors">Admin Dashboard</Link>
+          )}
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 z-10 shrink-0">
           {(!role || role === 'buyer') && (
             <>
               <div className="relative hidden md:block">

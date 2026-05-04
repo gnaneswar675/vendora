@@ -2,28 +2,28 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
-import { getOrders } from '@/lib/api';
+import { getUserOrders } from '@/lib/api';
 import { motion } from 'framer-motion';
 import { Package, Clock, CheckCircle2, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Orders() {
   const router = useRouter();
-  const { role } = useAuth();
+  const { role, user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (role !== 'buyer') {
-      router.push('/sign-in');
+    if (role !== 'buyer' || !user) {
+      if (role !== 'buyer') router.push('/sign-in');
       return;
     }
     
-    getOrders().then(data => {
+    getUserOrders(user.uid).then(data => {
       setOrders(data);
       setLoading(false);
     });
-  }, []);
+  }, [role, user, router]);
 
   if (loading) {
     return (
@@ -65,7 +65,7 @@ export default function Orders() {
                   <div className="flex flex-wrap gap-x-8 gap-y-2">
                     <div>
                       <p className="text-slate-400 mb-1">Order Placed</p>
-                      <p className="font-medium">{new Date(order.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                      <p className="font-medium">{new Date(order.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
                     </div>
                     <div>
                       <p className="text-slate-400 mb-1">Total</p>
@@ -103,17 +103,14 @@ export default function Orders() {
                           />
                         </div>
                         <div className="flex-1">
-                          <Link href={`/product/${item.productId}`} className="font-bold text-lg hover:text-blue-400 transition-colors line-clamp-1">
+                          <Link href={`/product/${item.id}`} className="font-bold text-lg hover:text-blue-400 transition-colors line-clamp-1">
                             {item.title}
                           </Link>
                           <p className="text-slate-400 text-sm mb-2">Qty: {item.quantity}</p>
-                          <div className="flex gap-3">
-                            <button className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition-colors">
-                              Buy it again
-                            </button>
-                            <button className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-lg transition-colors border border-slate-700">
-                              Track package
-                            </button>
+                          <div className="flex gap-3 mt-4">
+                            <Link href={`/product/${item.id}`} className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition-colors">
+                              Leave Feedback
+                            </Link>
                           </div>
                         </div>
                       </div>

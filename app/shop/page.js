@@ -67,36 +67,35 @@ export default function Shop() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
               whileHover={{ y: -5 }}
-              className="glass-card rounded-2xl overflow-hidden group border border-slate-700/50 flex flex-col"
+              className="bg-[#0a0a0a] rounded-2xl overflow-hidden group border border-slate-800/80 hover:border-slate-700 transition-colors flex flex-col shadow-2xl shadow-black/50"
             >
-              <Link href={`/product/${product.id}`} className="block relative overflow-hidden h-48 bg-slate-800">
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent z-10"></div>
+              <Link href={`/product/${product.id}`} className="block relative overflow-hidden h-52 bg-slate-900">
                 <img 
                   src={product.image} 
                   alt={product.title} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   onError={(e) => {
                     e.target.src = "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=500&q=80"
                   }}
                 />
-                <div className="absolute top-2 right-2 z-20 bg-slate-900/80 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white border border-slate-700">
+                <div className="absolute top-3 right-3 z-20 bg-black/80 backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] font-bold text-white uppercase tracking-wider border border-white/10">
                   {product.category}
                 </div>
               </Link>
-              <div className="p-5 flex-1 flex flex-col">
-                <div className="flex justify-between items-start mb-1">
-                  <Link href={`/product/${product.id}`} className="font-bold text-lg hover:text-blue-400 transition-colors line-clamp-1">
+              <div className="p-6 flex-1 flex flex-col relative z-20">
+                <div className="flex justify-between items-start mb-2">
+                  <Link href={`/product/${product.id}`} className="font-extrabold text-xl text-white hover:text-blue-500 transition-colors line-clamp-1 tracking-tight">
                     {product.title}
                   </Link>
                 </div>
-                <div className="flex items-center gap-1 text-yellow-400 text-sm mb-2">
-                  <Star className="h-3 w-3 fill-current" /> {product.rating} <span className="text-slate-500 text-xs ml-1">({product.reviews})</span>
+                <div className="flex items-center gap-1 text-yellow-500 text-sm mb-3 font-medium">
+                  <Star className="h-4 w-4 fill-current" /> {product.rating || 0} <span className="text-slate-500 text-xs ml-1">({product.reviews || 0} reviews)</span>
                 </div>
-                <p className="text-slate-400 text-sm line-clamp-2 mb-4 flex-1">
+                <p className="text-slate-400 text-sm line-clamp-2 mb-6 flex-1 leading-relaxed">
                   {product.description}
                 </p>
-                <div className="flex items-center justify-between mt-auto">
-                  <span className="text-blue-400 font-bold text-lg">${product.price}</span>
+                <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-800/50">
+                  <span className="text-white font-black text-2xl tracking-tight">${product.price}</span>
                   <button onClick={(e) => {
                     e.preventDefault();
                     if (role !== 'buyer') {
@@ -104,7 +103,7 @@ export default function Shop() {
                     } else {
                       addToCart(product);
                     }
-                  }} className="h-10 w-10 rounded-full bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white flex items-center justify-center transition-colors">
+                  }} className="h-12 w-12 rounded-full bg-white hover:bg-blue-600 text-black hover:text-white flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-blue-500/25">
                     <ShoppingCart className="h-5 w-5" />
                   </button>
                 </div>
