@@ -1,19 +1,23 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { getOrders } from '@/lib/api';
+import { useAuth } from '@/lib/auth';
+import { getVendorOrders } from '@/lib/api';
 import { motion } from 'framer-motion';
 import { Search, Edit, MoreVertical } from 'lucide-react';
 
 export default function VendorOrders() {
+  const { user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getOrders().then(data => {
-      setOrders(data);
-      setLoading(false);
-    });
-  }, []);
+    if (user) {
+      getVendorOrders(user.uid).then(data => {
+        setOrders(data);
+        setLoading(false);
+      });
+    }
+  }, [user]);
 
   if (loading) {
     return (

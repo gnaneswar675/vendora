@@ -1,20 +1,24 @@
 "use client";
 import { useState, useEffect } from 'react';
+import { useAuth } from '@/lib/auth';
 import { getVendorStats } from '@/lib/api';
 import { motion } from 'framer-motion';
 import { DollarSign, Package, ShoppingCart, Star, TrendingUp, Users } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function VendorDashboard() {
+  const { user } = useAuth();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getVendorStats().then(data => {
-      setStats(data);
-      setLoading(false);
-    });
-  }, []);
+    if (user) {
+      getVendorStats(user.uid).then(data => {
+        setStats(data);
+        setLoading(false);
+      });
+    }
+  }, [user]);
 
   if (loading) {
     return (
