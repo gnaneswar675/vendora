@@ -12,6 +12,11 @@ export default function Orders() {
   const { role, user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState('All');
+
+  const filteredOrders = statusFilter === 'All' 
+    ? orders 
+    : orders.filter(order => order.status === statusFilter);
 
   useEffect(() => {
     if (role !== 'buyer' || !user) {
@@ -39,8 +44,28 @@ export default function Orders() {
   return (
     <div className="min-h-screen pt-24 pb-20 container mx-auto px-4 relative z-10">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-2">My Orders</h1>
-        <p className="text-slate-400 mb-8">Track, return, or buy items again.</p>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">My Orders</h1>
+            <p className="text-slate-400">Track, return, or buy items again.</p>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-medium text-slate-400">Filter:</span>
+            <select 
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="bg-slate-800/80 border border-slate-700/80 text-white text-sm font-medium rounded-xl px-4 py-2.5 outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all cursor-pointer"
+            >
+              <option value="All">All Orders</option>
+              <option value="Processing">Processing</option>
+              <option value="Preparing">Preparing</option>
+              <option value="Packed">Packed</option>
+              <option value="Departed">Departed</option>
+              <option value="Delivered">Delivered</option>
+            </select>
+          </div>
+        </div>
 
         {orders.length === 0 ? (
           <div className="text-center py-20 glass-card rounded-3xl border border-slate-700/50">
@@ -51,9 +76,15 @@ export default function Orders() {
               Start Shopping
             </Link>
           </div>
+        ) : filteredOrders.length === 0 ? (
+          <div className="text-center py-16 glass-card rounded-3xl border border-slate-700/50">
+            <Clock className="h-12 w-12 text-slate-600 mx-auto mb-4" />
+            <h2 className="text-lg font-bold mb-1">No {statusFilter.toLowerCase()} orders</h2>
+            <p className="text-slate-400 text-sm">You don't have any orders with this status.</p>
+          </div>
         ) : (
           <div className="space-y-6">
-            {orders.map((order, i) => (
+            {filteredOrders.map((order, i) => (
               <motion.div 
                 key={order.id}
                 initial={{ opacity: 0, y: 20 }}

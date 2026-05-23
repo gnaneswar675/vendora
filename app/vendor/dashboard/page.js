@@ -111,18 +111,28 @@ export default function VendorDashboard() {
         >
           <h2 className="text-xl font-bold mb-6">Recent Activity</h2>
           <div className="space-y-6">
-            {[1, 2, 3, 4, 5].map((_, i) => (
-              <div key={i} className="flex gap-4 items-start">
-                <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0">
-                  <ShoppingCart className="h-5 w-5 text-blue-400" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-white mb-1">New order received</p>
-                  <p className="text-xs text-slate-400 mb-1">Order #ORD-20{i}5 • Neural Link Headset</p>
-                  <p className="text-xs text-blue-400">{i + 1} hour{i > 0 ? 's' : ''} ago</p>
-                </div>
-              </div>
-            ))}
+            {stats.recentOrders && stats.recentOrders.length > 0 ? (
+              stats.recentOrders.map((order, i) => {
+                // Find an item belonging to this vendor for the description
+                const vendorItem = order.items?.find(item => item.vendorId === user.uid) || order.items?.[0];
+                const timeStr = new Date(order.createdAt).toLocaleString();
+                
+                return (
+                  <div key={order.id} className="flex gap-4 items-start">
+                    <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0">
+                      <ShoppingCart className="h-5 w-5 text-blue-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-white mb-1">New order received</p>
+                      <p className="text-xs text-slate-400 mb-1">Order #{order.id.slice(0, 8)} • {vendorItem?.title || 'Unknown Product'}</p>
+                      <p className="text-xs text-blue-400">{timeStr}</p>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <p className="text-slate-400 text-sm">No recent activity found.</p>
+            )}
           </div>
         </motion.div>
       </div>
