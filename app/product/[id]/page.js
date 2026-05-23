@@ -161,17 +161,18 @@ export default function ProductDetail() {
             <div className="flex items-center glass-card border border-slate-700 rounded-xl overflow-hidden h-14">
               <button 
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="w-12 h-full flex items-center justify-center hover:bg-slate-800 text-xl transition-colors"
+                className="w-12 h-full flex items-center justify-center hover:bg-slate-800 text-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={!product.stock || product.stock < 1}
               >
                 -
               </button>
               <div className="w-12 h-full flex items-center justify-center font-bold border-x border-slate-700/50">
-                {quantity}
+                {(!product.stock || product.stock < 1) ? 0 : quantity}
               </div>
               <button 
-                onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-                className="w-12 h-full flex items-center justify-center hover:bg-slate-800 text-xl transition-colors"
-                disabled={quantity >= product.stock}
+                onClick={() => setQuantity(Math.min(product.stock || 0, quantity + 1))}
+                className="w-12 h-full flex items-center justify-center hover:bg-slate-800 text-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={!product.stock || quantity >= product.stock}
               >
                 +
               </button>
@@ -179,10 +180,12 @@ export default function ProductDetail() {
             
             <button 
               onClick={() => {
+                if (!product.stock || product.stock < 1) return;
+                
                 if (role !== 'buyer') {
                   router.push('/sign-in');
                 } else {
-                  addToCart(product, quantity);
+                  addToCart(product, (!product.stock || product.stock < 1) ? 0 : quantity);
                 }
               }}
               className={`flex-1 h-14 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all ${
@@ -190,7 +193,7 @@ export default function ProductDetail() {
                   ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]' 
                   : 'bg-slate-800 text-slate-500 cursor-not-allowed'
               }`}
-              disabled={product.stock === 0}
+              disabled={!product.stock || product.stock < 1}
             >
               <ShoppingCart className="h-5 w-5" />
               {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}

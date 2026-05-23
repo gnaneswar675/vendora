@@ -11,12 +11,17 @@ export default function VendorOrders() {
   const [loading, setLoading] = useState(true);
   const [editingOrderId, setEditingOrderId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
 
-  const filteredOrders = orders.filter(order => 
-    order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (order.buyerName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (order.status || '').toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredOrders = orders.filter(order => {
+    const matchesSearch = order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (order.buyerName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (order.status || '').toLowerCase().includes(searchQuery.toLowerCase());
+      
+    const matchesStatus = statusFilter === 'All' || (order.status || 'Processing').toLowerCase() === statusFilter.toLowerCase();
+    
+    return matchesSearch && matchesStatus;
+  });
 
   useEffect(() => {
     if (user) {
@@ -55,15 +60,30 @@ export default function VendorOrders() {
           <h1 className="text-3xl font-bold mb-1">Orders</h1>
           <p className="text-slate-400">Manage and fulfill your customer orders.</p>
         </div>
-        <div className="relative w-full md:w-64">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
-          <input 
-            type="text" 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by ID, customer, or status..." 
-            className="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-2 pl-10 pr-4 text-white focus:outline-none focus:border-blue-500 transition-colors"
-          />
+        <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="bg-slate-800/50 border border-slate-700 rounded-xl py-2 px-4 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors shrink-0"
+          >
+            <option value="All">All Statuses</option>
+            <option value="Processing">Processing</option>
+            <option value="Preparing">Preparing</option>
+            <option value="Packed">Packed</option>
+            <option value="Departed">Departed</option>
+            <option value="Delivered">Delivered</option>
+          </select>
+          
+          <div className="relative w-full md:w-64">
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+            <input 
+              type="text" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by ID or customer..." 
+              className="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-2 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+            />
+          </div>
         </div>
       </div>
 
@@ -100,17 +120,33 @@ export default function VendorOrders() {
                     </td>
                     <td className="p-4 text-slate-300">{order.buyerName || 'Unknown Buyer'}</td>
                   <td className="p-4">
-                    <span className={`text-xs font-bold px-2 py-1 rounded ${
-                      order.status === 'Delivered' 
-                        ? 'bg-green-500/10 text-green-400' 
-                        : order.status === 'Departed'
-                        ? 'bg-blue-500/10 text-blue-400'
-                        : order.status === 'Packed'
-                        ? 'bg-purple-500/10 text-purple-400'
-                        : 'bg-yellow-500/10 text-yellow-400'
-                    }`}>
-                      {order.status}
-                    </span>
+                    {editingOrderId === order.id ? (
+                      <select 
+                        autoFocus
+                        value={order.status || 'Processing'}
+                        onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                        onBlur={() => setEditingOrderId(null)}
+                        className="bg-slate-800 border border-slate-700 text-white text-xs font-bold px-2 py-1.5 rounded focus:outline-none focus:border-blue-500"
+                      >
+                        <option value="Processing">Processing</option>
+                        <option value="Preparing">Preparing</option>
+                        <option value="Packed">Packed</option>
+                        <option value="Departed">Departed</option>
+                        <option value="Delivered">Delivered</option>
+                      </select>
+                    ) : (
+                      <span className={`text-xs font-bold px-2 py-1 rounded ${
+                        order.status === 'Delivered' 
+                          ? 'bg-green-500/10 text-green-400'
+                          : order.status === 'Departed'
+                          ? 'bg-blue-500/10 text-blue-400'
+                          : order.status === 'Packed'
+                          ? 'bg-purple-500/10 text-purple-400'
+                          : 'bg-yellow-500/10 text-yellow-400'
+                      }`}>
+                        {order.status || 'Processing'}
+                      </span>
+                    )}
                   </td>
                   <td className="p-4 font-medium text-blue-400">${(order.total || 0).toFixed(2)}</td>
                   <td className="p-4 text-right">
@@ -124,27 +160,6 @@ export default function VendorOrders() {
                       >
                         <Edit className="h-4 w-4" />
                       </button>
-
-                      {/* Dropdown Menu */}
-                      {editingOrderId === order.id && (
-                        <motion.div 
-                          initial={{ opacity: 0, scale: 0.95, y: -5 }}
-                          animate={{ opacity: 1, scale: 1, y: 0 }}
-                          className="absolute top-full right-8 mt-1 w-36 bg-slate-800 border border-slate-700/80 rounded-xl shadow-xl overflow-hidden z-50 text-left"
-                        >
-                          {['Processing', 'Preparing', 'Packed', 'Departed', 'Delivered'].map(status => (
-                            <button
-                              key={status}
-                              onClick={() => handleStatusChange(order.id, status)}
-                              className={`w-full text-left px-4 py-2 text-sm transition-colors hover:bg-slate-700/50 ${
-                                order.status === status ? 'text-blue-400 font-medium' : 'text-slate-300'
-                              }`}
-                            >
-                              {status}
-                            </button>
-                          ))}
-                        </motion.div>
-                      )}
 
                       <button className="p-2 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-800">
                         <MoreVertical className="h-4 w-4" />

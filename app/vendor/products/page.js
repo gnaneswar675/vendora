@@ -1,14 +1,16 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { getVendorProducts } from '@/lib/api';
+import { getVendorProducts, deleteProduct, updateProduct } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Plus, Search, Edit, Trash2, MoreVertical, Star } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Star, X } from 'lucide-react';
 
 export default function VendorProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [isUpdating, setIsUpdating] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -18,10 +20,46 @@ export default function VendorProducts() {
         setLoading(false);
       });
     } else if (user === null) {
-      // Not logged in or not loaded yet
       setLoading(false);
     }
   }, [user]);
+
+  const handleDelete = async (productId) => {
+    if (!confirm('Are you sure you want to delete this product?')) return;
+    try {
+      await deleteProduct(productId);
+      setProducts(products.filter(p => p.id !== productId));
+    } catch (error) {
+      console.error("Failed to delete product:", error);
+      alert("Failed to delete product.");
+    }
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    if (!editingProduct) return;
+    setIsUpdating(true);
+    
+    try {
+      // Create a copy without the id to pass to Firebase
+      const { id, ...updateData } = editingProduct;
+      
+      // Ensure numeric fields are numbers
+      updateData.price = parseFloat(updateData.price);
+      updateData.stock = parseInt(updateData.stock, 10);
+      
+      await updateProduct(id, updateData);
+      
+      // Update local state
+      setProducts(products.map(p => p.id === id ? editingProduct : p));
+      setEditingProduct(null);
+    } catch (error) {
+      console.error("Failed to update product:", error);
+      alert("Failed to update product.");
+    } finally {
+      setIsUpdating(false);
+    }
+  };
 
   if (loading || !user) {
     return (
@@ -110,14 +148,17 @@ export default function VendorProducts() {
                   </td>
                   <td className="p-4 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <button className="p-2 text-slate-400 hover:text-blue-400 transition-colors rounded-lg hover:bg-slate-800">
+                      <button 
+                        onClick={() => setEditingProduct({ ...product })}
+                        className="p-2 text-slate-400 hover:text-blue-400 transition-colors rounded-lg hover:bg-slate-800 flex items-center justify-center"
+                      >
                         <Edit className="h-4 w-4" />
                       </button>
-                      <button className="p-2 text-slate-400 hover:text-red-400 transition-colors rounded-lg hover:bg-slate-800">
+                      <button 
+                        onClick={() => handleDelete(product.id)}
+                        className="p-2 text-slate-400 hover:text-red-400 transition-colors rounded-lg hover:bg-slate-800"
+                      >
                         <Trash2 className="h-4 w-4" />
-                      </button>
-                      <button className="p-2 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-800">
-                        <MoreVertical className="h-4 w-4" />
                       </button>
                     </div>
                   </td>
@@ -127,6 +168,112 @@ export default function VendorProducts() {
           </table>
         </div>
       </motion.div>
+
+      {/* Edit Product Modal */}
+      {editingProduct && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setEditingProduct(null)}></div>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative glass-card rounded-3xl border border-slate-700/50 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+          >
+            <div className="sticky top-0 bg-slate-900/80 backdrop-blur p-6 border-b border-slate-700/50 flex justify-between items-center z-10">
+              <h2 className="text-2xl font-bold">Edit Product</h2>
+              <button 
+                onClick={() => setEditingProduct(null)}
+                className="p-2 text-slate-400 hover:text-white bg-slate-800/50 rounded-full transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleUpdate} className="p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2 md:col-span-2">
+                  <label className="text-sm font-medium text-slate-300">Product Title</label>
+                  <input 
+                    type="text" 
+                    required
+                    value={editingProduct.title}
+                    onChange={(e) => setEditingProduct({...editingProduct, title: e.target.value})}
+                    className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 transition-colors"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-slate-300">Price ($)</label>
+                  <input 
+                    type="number" 
+                    required
+                    step="0.01"
+                    min="0"
+                    value={editingProduct.price}
+                    onChange={(e) => setEditingProduct({...editingProduct, price: e.target.value})}
+                    className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 transition-colors"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-slate-300">Stock Quantity</label>
+                  <input 
+                    type="number" 
+                    required
+                    min="0"
+                    value={editingProduct.stock}
+                    onChange={(e) => setEditingProduct({...editingProduct, stock: e.target.value})}
+                    className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 transition-colors"
+                  />
+                </div>
+
+                <div className="space-y-2 md:col-span-2">
+                  <label className="text-sm font-medium text-slate-300">Category</label>
+                  <select 
+                    required
+                    value={editingProduct.category}
+                    onChange={(e) => setEditingProduct({...editingProduct, category: e.target.value})}
+                    className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 transition-colors"
+                  >
+                    <option value="Electronics">Electronics</option>
+                    <option value="Clothing">Clothing</option>
+                    <option value="Home & Garden">Home & Garden</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Toys">Toys</option>
+                  </select>
+                </div>
+
+                <div className="space-y-2 md:col-span-2">
+                  <label className="text-sm font-medium text-slate-300">Description</label>
+                  <textarea 
+                    required
+                    rows="4"
+                    value={editingProduct.description}
+                    onChange={(e) => setEditingProduct({...editingProduct, description: e.target.value})}
+                    className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 transition-colors"
+                  ></textarea>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-slate-700/50 flex justify-end gap-4">
+                <button 
+                  type="button"
+                  onClick={() => setEditingProduct(null)}
+                  className="px-6 py-3 font-semibold text-slate-300 hover:text-white transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit"
+                  disabled={isUpdating}
+                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors disabled:opacity-50"
+                >
+                  {isUpdating ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }

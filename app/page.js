@@ -35,6 +35,7 @@ import {
   Instagram,
   Store,
 } from "lucide-react";
+import { getProducts } from "@/lib/api";
 
 // ─── Recharts (lazy mounted to avoid SSR issues) ─────────────────────────────
 let AreaChart, Area, ResponsiveContainer, Tooltip;
@@ -717,6 +718,17 @@ function ProductCard({ product, index }) {
 }
 
 function MarketplaceShowcase() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getProducts().then((data) => {
+      // Limit to 6 featured products for the landing page
+      setProducts(data.slice(0, 6));
+      setLoading(false);
+    });
+  }, []);
+
   return (
     <section className="py-28 relative z-10">
       <div className="container mx-auto px-4 max-w-7xl">
@@ -731,14 +743,22 @@ function MarketplaceShowcase() {
             </motion.p>
           </div>
 
-          <motion.div
-            variants={stagger}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
-          >
-            {PRODUCTS.map((product, i) => (
-              <ProductCard key={product.id} product={product} index={i} />
-            ))}
-          </motion.div>
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-80 bg-slate-800/50 rounded-2xl animate-pulse"></div>
+              ))}
+            </div>
+          ) : (
+            <motion.div
+              variants={stagger}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+            >
+              {products.map((product, i) => (
+                <ProductCard key={product.id} product={product} index={i} />
+              ))}
+            </motion.div>
+          )}
 
           <motion.div variants={item} className="text-center mt-12">
             <Link href="/shop">
