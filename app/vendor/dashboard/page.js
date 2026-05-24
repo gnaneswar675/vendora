@@ -35,7 +35,7 @@ export default function VendorDashboard() {
   }
 
   const statCards = [
-    { title: "Total Revenue", value: `$${stats.totalRevenue.toLocaleString()}`, icon: DollarSign, color: "text-green-400", bg: "bg-green-500/10" },
+    { title: "Total Revenue", value: `₹${stats.totalRevenue.toLocaleString()}`, icon: DollarSign, color: "text-green-400", bg: "bg-green-500/10" },
     { title: "Active Orders", value: stats.activeOrders, icon: ShoppingCart, color: "text-blue-400", bg: "bg-blue-500/10" },
     { title: "Total Products", value: stats.totalProducts, icon: Package, color: "text-purple-400", bg: "bg-purple-500/10" },
     { title: "Store Rating", value: stats.rating, icon: Star, color: "text-yellow-400", bg: "bg-yellow-500/10" }
@@ -92,7 +92,7 @@ export default function VendorDashboard() {
               <LineChart data={stats.revenueData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
                 <XAxis dataKey="name" stroke="#94a3b8" axisLine={false} tickLine={false} />
-                <YAxis stroke="#94a3b8" axisLine={false} tickLine={false} tickFormatter={(value) => `$${value}`} />
+                <YAxis stroke="#94a3b8" axisLine={false} tickLine={false} tickFormatter={(value) => `₹${value}`} />
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', borderRadius: '8px' }}
                   itemStyle={{ color: '#60a5fa' }}

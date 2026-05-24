@@ -133,7 +133,7 @@ export default function VendorProducts() {
                       {product.category}
                     </span>
                   </td>
-                  <td className="p-4 font-medium text-white">${product.price}</td>
+                  <td className="p-4 font-medium text-white">₹{product.price}</td>
                   <td className="p-4">
                     {product.stock > 0 ? (
                       <span className="text-green-400 font-medium">{product.stock} in stock</span>
@@ -202,7 +202,7 @@ export default function VendorProducts() {
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-300">Price ($)</label>
+                  <label className="text-sm font-medium text-slate-300">Price (₹)</label>
                   <input 
                     type="number" 
                     required

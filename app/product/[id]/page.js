@@ -150,7 +150,7 @@ export default function ProductDetail() {
           </div>
 
           <div className="mb-8">
-            <span className="text-4xl font-bold text-blue-400">${product.price}</span>
+            <span className="text-4xl font-bold text-blue-400">₹{product.price}</span>
           </div>
 
           <p className="text-slate-300 text-lg mb-8 leading-relaxed">

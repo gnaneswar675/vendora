@@ -57,7 +57,7 @@ export default function VendorAnalytics() {
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="name" stroke="#94a3b8" axisLine={false} tickLine={false} />
-                <YAxis stroke="#94a3b8" axisLine={false} tickLine={false} tickFormatter={(value) => `$${value}`} />
+                <YAxis stroke="#94a3b8" axisLine={false} tickLine={false} tickFormatter={(value) => `₹${value}`} />
                 <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', borderRadius: '8px' }}

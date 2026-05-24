@@ -73,7 +73,7 @@ const TESTIMONIALS = [
   { name: "Sarah Chen",     role: "Fashion Vendor · 2 yrs",    quote: "Vendora transformed my small boutique into a 6-figure business. The analytics alone are worth it.",         avatar: "SC", stars: 5 },
   { name: "Marcus Williams",role: "Electronics Retailer",       quote: "The vendor dashboard is insane. I manage 400+ SKUs without ever feeling overwhelmed.",                       avatar: "MW", stars: 5 },
   { name: "Priya Patel",    role: "Premium Buyer",              quote: "Best marketplace UI I've ever used. Finding exactly what I want is actually enjoyable now.",                  avatar: "PP", stars: 5 },
-  { name: "James Ford",     role: "Tech Vendor · Top 10",       quote: "Zero to $50K monthly in 8 months. Vendora's seller tools and built-in SEO are genuinely unmatched.",        avatar: "JF", stars: 5 },
+  { name: "James Ford",     role: "Tech Vendor · Top 10",       quote: "Zero to ₹50K monthly in 8 months. Vendora's seller tools and built-in SEO are genuinely unmatched.",        avatar: "JF", stars: 5 },
 ];
 
 const STEPS = [
@@ -83,7 +83,7 @@ const STEPS = [
 ];
 
 const STATS = [
-  { value: 2.4,  suffix: "M+", label: "GMV Processed",    prefix: "$", color: "#3b82f6" },
+  { value: 2.4,  suffix: "M+", label: "GMV Processed",    prefix: "₹", color: "#3b82f6" },
   { value: 50,   suffix: "K+", label: "Active Vendors",    prefix: "",  color: "#8b5cf6" },
   { value: 1.2,  suffix: "M+", label: "Products Listed",   prefix: "",  color: "#06b6d4" },
   { value: 98,   suffix: "%",  label: "Satisfaction Rate", prefix: "",  color: "#10b981" },
@@ -444,7 +444,7 @@ function HeroSection() {
           {[
             { label: "50K+ Vendors",    dot: "#3b82f6" },
             { label: "1.2M Products",   dot: "#8b5cf6" },
-            { label: "$2.4M+ GMV",      dot: "#06b6d4" },
+            { label: "₹2.4M+ GMV",      dot: "#06b6d4" },
             { label: "98% Satisfaction",dot: "#10b981" },
           ].map(({ label, dot }, i) => (
             <div key={i} className="flex items-center gap-2">
@@ -486,7 +486,7 @@ function HeroSection() {
               Live
             </span>
           </div>
-          <p className="text-[1.7rem] font-black text-white tracking-tight mb-1">$24,891</p>
+          <p className="text-[1.7rem] font-black text-white tracking-tight mb-1">₹24,891</p>
           <p className="text-xs text-emerald-400 font-medium mb-3">↑ +18.4% vs last week</p>
           <div className="h-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.07)" }}>
             <motion.div
@@ -529,9 +529,9 @@ function HeroSection() {
           </div>
           <div className="space-y-2.5">
             {[
-              { name: "Neural Headset Pro",  price: "$299", dot: "#3b82f6" },
-              { name: "Quantum Watch X",     price: "$599", dot: "#8b5cf6" },
-              { name: "Arc Keyboard MK2",    price: "$189", dot: "#06b6d4" },
+              { name: "Neural Headset Pro",  price: "₹299", dot: "#3b82f6" },
+              { name: "Quantum Watch X",     price: "₹599", dot: "#8b5cf6" },
+              { name: "Arc Keyboard MK2",    price: "₹189", dot: "#06b6d4" },
             ].map((order, i) => (
               <motion.div
                 key={i}
@@ -699,7 +699,7 @@ function ProductCard({ product, index }) {
           className="flex items-center justify-between mt-auto pt-4"
           style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
         >
-          <span className="text-[1.6rem] font-black text-white tracking-tight">${product.price}</span>
+          <span className="text-[1.6rem] font-black text-white tracking-tight">₹{product.price}</span>
           <Link href={`/product/${product.id}`}>
             <motion.button
               id={`view-product-${product.id}`}
@@ -909,7 +909,7 @@ function DashboardMockup() {
       {/* Stats cards */}
       <div className="grid grid-cols-3 gap-3 mb-5">
         {[
-          { label: "Revenue",  value: "$38,200", delta: "+22%",  color: "#3b82f6" },
+          { label: "Revenue",  value: "₹38,200", delta: "+22%",  color: "#3b82f6" },
           { label: "Orders",   value: "284",     delta: "+14%",  color: "#8b5cf6" },
           { label: "Rating",   value: "4.9 ★",   delta: "Top 5%",color: "#10b981" },
         ].map((s, i) => (
@@ -956,7 +956,7 @@ function DashboardMockup() {
                     fontSize: 11,
                     padding: "6px 10px",
                   }}
-                  formatter={(v) => [`$${v.toLocaleString()}`, "Revenue"]}
+                  formatter={(v) => [`₹${v.toLocaleString()}`, "Revenue"]}
                   labelStyle={{ color: "#737373", marginBottom: 2 }}
                 />
                 <Area

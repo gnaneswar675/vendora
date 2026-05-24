@@ -95,7 +95,7 @@ export default function Shop() {
                   {product.description}
                 </p>
                 <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-800/50">
-                  <span className="text-white font-black text-2xl tracking-tight">${product.price}</span>
+                  <span className="text-white font-black text-2xl tracking-tight">₹{product.price}</span>
                   <button onClick={(e) => {
                     e.preventDefault();
                     if (role !== 'buyer') {

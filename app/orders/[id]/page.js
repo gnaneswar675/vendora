@@ -193,7 +193,7 @@ export default function OrderDetails() {
                     <p className="text-slate-400 text-sm mt-1">Qty: {item.quantity}</p>
                   </div>
                   <div className="font-medium">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    ₹{(item.price * item.quantity).toFixed(2)}
                   </div>
                 </div>
               ))}
@@ -203,19 +203,19 @@ export default function OrderDetails() {
             <div className="space-y-3 text-sm">
               <div className="flex justify-between text-slate-400">
                 <span>Subtotal</span>
-                <span className="text-white">${(order.subtotal || 0).toFixed(2)}</span>
+                <span className="text-white">₹{(order.subtotal || 0).toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-slate-400">
                 <span>Shipping</span>
-                <span className="text-white">${(order.shipping || 0).toFixed(2)}</span>
+                <span className="text-white">₹{(order.shipping || 0).toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-slate-400">
                 <span>Tax</span>
-                <span className="text-white">${(order.tax || 0).toFixed(2)}</span>
+                <span className="text-white">₹{(order.tax || 0).toFixed(2)}</span>
               </div>
               <div className="flex justify-between items-center pt-4 mt-4 border-t border-slate-700/50">
                 <span className="text-lg font-bold">Total</span>
-                <span className="text-2xl font-black text-blue-400">${(order.total || 0).toFixed(2)}</span>
+                <span className="text-2xl font-black text-blue-400">₹{(order.total || 0).toFixed(2)}</span>
               </div>
             </div>
           </motion.div>

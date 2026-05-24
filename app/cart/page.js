@@ -58,7 +58,7 @@ export default function Cart() {
                   <Link href={`/product/${item.id}`} className="block font-bold text-lg hover:text-blue-400 transition-colors">
                     {item.title}
                   </Link>
-                  <p className="text-slate-400 font-medium">${item.price}</p>
+                  <p className="text-slate-400 font-medium">₹{item.price}</p>
                 </div>
 
                 <div className="flex items-center gap-4">
@@ -87,11 +87,11 @@ export default function Cart() {
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between text-slate-300">
                   <span>Subtotal</span>
-                  <span className="font-medium">${subtotal.toFixed(2)}</span>
+                  <span className="font-medium">₹{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-slate-300">
                   <span>Shipping Estimate</span>
-                  <span className="font-medium">${shipping.toFixed(2)}</span>
+                  <span className="font-medium">₹{shipping.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-slate-300">
                   <span>Tax</span>
@@ -101,7 +101,7 @@ export default function Cart() {
 
               <div className="flex justify-between text-xl font-bold text-white mb-8 pt-4 border-t border-slate-800">
                 <span>Total</span>
-                <span className="text-blue-400">${total.toFixed(2)}</span>
+                <span className="text-blue-400">₹{total.toFixed(2)}</span>
               </div>
 
               <Link href="/checkout" className="w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all flex items-center justify-center gap-2 mb-4 shadow-[0_0_15px_rgba(37,99,235,0.4)]">

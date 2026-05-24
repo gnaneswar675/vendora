@@ -100,7 +100,7 @@ export default function Orders() {
                     </div>
                     <div>
                       <p className="text-slate-400 mb-1">Total</p>
-                      <p className="font-medium text-blue-400">${order.total.toFixed(2)}</p>
+                      <p className="font-medium text-blue-400">₹{order.total.toFixed(2)}</p>
                     </div>
                   </div>
                   <div className="text-left sm:text-right">

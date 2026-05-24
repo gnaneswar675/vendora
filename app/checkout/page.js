@@ -177,7 +177,7 @@ export default function Checkout() {
                       <p className="text-xs text-slate-400">Qty: {item.quantity}</p>
                     </div>
                   </div>
-                  <span className="font-medium">${(item.price * item.quantity).toFixed(2)}</span>
+                  <span className="font-medium">₹{(item.price * item.quantity).toFixed(2)}</span>
                 </div>
               ))}
             </div>
@@ -185,21 +185,21 @@ export default function Checkout() {
             <div className="space-y-3 mb-6 text-sm">
               <div className="flex justify-between text-slate-400">
                 <span>Subtotal</span>
-                <span className="text-white">${subtotal.toFixed(2)}</span>
+                <span className="text-white">₹{subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-slate-400">
                 <span>Shipping</span>
-                <span className="text-white">${shipping.toFixed(2)}</span>
+                <span className="text-white">₹{shipping.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-slate-400">
                 <span>Tax</span>
-                <span className="text-white">${tax.toFixed(2)}</span>
+                <span className="text-white">₹{tax.toFixed(2)}</span>
               </div>
             </div>
 
             <div className="flex justify-between text-xl font-bold text-white mb-8 pt-4 border-t border-slate-800">
               <span>Total</span>
-              <span className="text-blue-400">${total.toFixed(2)}</span>
+              <span className="text-blue-400">₹{total.toFixed(2)}</span>
             </div>
 
             <button 
@@ -215,7 +215,7 @@ export default function Checkout() {
                 </>
               ) : (
                 <>
-                  <Lock className="h-5 w-5" /> Pay ${total.toFixed(2)}
+                  <Lock className="h-5 w-5" /> Pay ₹{total.toFixed(2)}
                 </>
               )}
             </button>

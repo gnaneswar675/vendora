@@ -154,7 +154,7 @@ export default function VendorOrders() {
                       {order.status || 'Processing'}
                     </span>
                   </td>
-                  <td className="p-4 font-medium text-blue-400">${(order.total || 0).toFixed(2)}</td>
+                  <td className="p-4 font-medium text-blue-400">₹{(order.total || 0).toFixed(2)}</td>
                   <td className="p-4 text-right">
                     <div className="flex items-center justify-end gap-2 relative">
                       <button 
