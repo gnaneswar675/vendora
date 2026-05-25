@@ -9,13 +9,14 @@ import { ArrowRight, Lock, Mail } from 'lucide-react';
 function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { login } = useAuth();
+  const { login, resetPassword } = useAuth();
   
   const defaultRole = searchParams.get('role') || 'buyer';
   const [role, setRole] = useState(defaultRole);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [resetMessage, setResetMessage] = useState('');
   const [loading, setLoading] = useState(false);
   
   const handleLogin = async (e) => {
@@ -23,14 +24,35 @@ function SignInForm() {
     setError('');
     setLoading(true);
     try {
-      await login(email, password);
-      // Wait for auth state to update before redirecting or let it redirect based on user role?
-      // For now, let's redirect to shop. The role will be fetched by AuthProvider.
-      router.push('/');
+      const userRole = await login(email, password);
+      if (userRole === 'vendor') {
+        router.push('/vendor/dashboard');
+      } else if (userRole === 'admin') {
+        router.push('/admin/dashboard');
+      } else {
+        router.push('/shop');
+      }
     } catch (err) {
       setError('Failed to sign in. Please check your credentials.');
     }
     setLoading(false);
+  };
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    if (!email) {
+      setError('Please enter your email address first to reset password.');
+      setResetMessage('');
+      return;
+    }
+    try {
+      await resetPassword(email);
+      setResetMessage('Password reset email sent! Check your inbox.');
+      setError('');
+    } catch (err) {
+      setError('Failed to send reset email. Make sure the email is correct.');
+      setResetMessage('');
+    }
   };
 
   return (
@@ -60,6 +82,7 @@ function SignInForm() {
       </div>
 
       {error && <div className="bg-red-500/10 border border-red-500/50 text-red-400 p-3 rounded-xl mb-6 text-sm">{error}</div>}
+      {resetMessage && <div className="bg-green-500/10 border border-green-500/50 text-green-400 p-3 rounded-xl mb-6 text-sm">{resetMessage}</div>}
 
       <form onSubmit={handleLogin} className="space-y-4">
         <div>
@@ -97,7 +120,7 @@ function SignInForm() {
             <input type="checkbox" className="rounded border-slate-700 bg-slate-900 text-blue-600 focus:ring-blue-500" />
             Remember me
           </label>
-          <Link href="#" className="text-blue-400 hover:text-blue-300">Forgot password?</Link>
+          <button type="button" onClick={handleResetPassword} className="text-blue-400 hover:text-blue-300">Forgot password?</button>
         </div>
 
         <button 

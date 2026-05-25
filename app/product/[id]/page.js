@@ -103,7 +103,7 @@ export default function ProductDetail() {
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="relative rounded-3xl overflow-hidden glass-card border border-slate-700/50 aspect-square lg:aspect-auto h-[400px] lg:h-[600px]"
+          className="relative rounded-3xl overflow-hidden glass-card border border-slate-700/50 aspect-square lg:aspect-auto h-[300px] lg:h-[450px]"
         >
           <img 
             src={product.image} 
@@ -136,7 +136,7 @@ export default function ProductDetail() {
             )}
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">{product.title}</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">{product.title}</h1>
           
           <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-800">
             <div className="flex items-center gap-1 text-yellow-400">
@@ -149,16 +149,16 @@ export default function ProductDetail() {
             <span className="text-slate-400">Sold by <Link href="#" className="text-blue-400 hover:underline">{product.vendorName}</Link></span>
           </div>
 
-          <div className="mb-8">
-            <span className="text-4xl font-bold text-blue-400">₹{product.price}</span>
+          <div className="mb-6">
+            <span className="text-3xl font-bold text-blue-400">₹{product.price}</span>
           </div>
 
-          <p className="text-slate-300 text-lg mb-8 leading-relaxed">
+          <p className="text-slate-300 text-base mb-6 leading-relaxed">
             {product.description}
           </p>
 
           <div className="flex items-center gap-4 mb-8">
-            <div className="flex items-center glass-card border border-slate-700 rounded-xl overflow-hidden h-14">
+            <div className="flex items-center glass-card border border-slate-700 rounded-xl overflow-hidden h-12">
               <button 
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 className="w-12 h-full flex items-center justify-center hover:bg-slate-800 text-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -188,7 +188,7 @@ export default function ProductDetail() {
                   addToCart(product, (!product.stock || product.stock < 1) ? 0 : quantity);
                 }
               }}
-              className={`flex-1 h-14 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all ${
+              className={`flex-1 h-12 rounded-xl font-bold text-base flex items-center justify-center gap-2 transition-all ${
                 product.stock > 0 
                   ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]' 
                   : 'bg-slate-800 text-slate-500 cursor-not-allowed'
@@ -202,17 +202,17 @@ export default function ProductDetail() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-auto">
             <div className="glass-card p-4 rounded-xl border border-slate-700/50 flex flex-col items-center text-center">
-              <ShieldCheck className="h-6 w-6 text-blue-400 mb-2" />
+              <ShieldCheck className="h-5 w-5 text-blue-400 mb-2" />
               <h4 className="font-semibold text-sm mb-1">1 Year Warranty</h4>
               <p className="text-xs text-slate-400">Full protection</p>
             </div>
             <div className="glass-card p-4 rounded-xl border border-slate-700/50 flex flex-col items-center text-center">
-              <Truck className="h-6 w-6 text-blue-400 mb-2" />
+              <Truck className="h-5 w-5 text-blue-400 mb-2" />
               <h4 className="font-semibold text-sm mb-1">Fast Delivery</h4>
               <p className="text-xs text-slate-400">Within 24 hours</p>
             </div>
             <div className="glass-card p-4 rounded-xl border border-slate-700/50 flex flex-col items-center text-center">
-              <RotateCcw className="h-6 w-6 text-blue-400 mb-2" />
+              <RotateCcw className="h-5 w-5 text-blue-400 mb-2" />
               <h4 className="font-semibold text-sm mb-1">Free Returns</h4>
               <p className="text-xs text-slate-400">30-day policy</p>
             </div>
@@ -222,7 +222,7 @@ export default function ProductDetail() {
 
       {/* Reviews Section */}
       <div className="mt-20 border-t border-slate-800 pt-12">
-        <h2 className="text-3xl font-bold mb-8">Customer Feedback</h2>
+        <h2 className="text-2xl font-bold mb-8">Customer Feedback</h2>
         
         {userHasPurchased && (
           <motion.div 

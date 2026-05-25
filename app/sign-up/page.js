@@ -29,7 +29,8 @@ function SignUpForm() {
       const displayName = role === 'vendor' ? `${name} (${storeName})` : name;
       await signup(email, password, displayName, role);
       // Let the AuthProvider load the role and handle redirect, or do it here
-      if (role === 'vendor') router.push('/vendor/dashboard');
+      if (role === 'admin') router.push('/admin/dashboard');
+      else if (role === 'vendor') router.push('/vendor/dashboard');
       else router.push('/shop');
     } catch (err) {
       setError(err.message || 'Failed to create an account.');
@@ -53,6 +54,13 @@ function SignUpForm() {
           onClick={() => setRole('vendor')}
         >
           Vendor
+        </button>
+        <button 
+          type="button"
+          className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${role === 'admin' ? 'bg-red-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
+          onClick={() => setRole('admin')}
+        >
+          Admin
         </button>
       </div>
 
