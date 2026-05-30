@@ -1505,6 +1505,92 @@ function CTABanner() {
 }
 
 // ════════════════════════════════════════════════════════════════════════════════
+// PRODUCTS SHOWCASE
+// ════════════════════════════════════════════════════════════════════════════════
+
+function ProductsShowcase() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getProducts().then((data) => {
+      // Sort by best-selling metrics (reviews/rating) to get true "Top Sellers"
+      const topSellers = [...data].sort((a, b) => {
+        const scoreA = (a.reviews || 0) * (a.rating || 0);
+        const scoreB = (b.reviews || 0) * (b.rating || 0);
+        return scoreB - scoreA;
+      });
+      setProducts(topSellers.slice(0, 6));
+      setLoading(false);
+    });
+  }, []);
+
+  return (
+    <section className="py-28 relative z-10">
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 50% 60% at 70% 40%, rgba(139,92,246,0.04) 0%, transparent 65%)" }}
+      />
+
+      <div className="container mx-auto px-4 max-w-7xl">
+        <SectionWrapper>
+          <div className="text-center mb-16">
+            <SectionPill>Marketplace</SectionPill>
+            <motion.h2 variants={item} className="text-4xl md:text-6xl font-black tracking-tighter mb-4 text-white">
+              Our Products
+            </motion.h2>
+            <motion.p variants={item} className="text-slate-400 text-lg max-w-xl mx-auto">
+              Top selling products from verified vendors. Premium quality, guaranteed.
+            </motion.p>
+          </div>
+
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="h-80 bg-slate-800/50 rounded-2xl animate-pulse"></div>
+              ))}
+            </div>
+          ) : products.length === 0 ? (
+            <motion.div variants={item} className="text-center py-20">
+              <p className="text-slate-500 text-lg">No products available yet. Check back soon!</p>
+            </motion.div>
+          ) : (
+            <motion.div
+              variants={stagger}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+            >
+              {products.map((product, i) => (
+                <ProductCard key={product.id} product={product} index={i} />
+              ))}
+            </motion.div>
+          )}
+
+          {/* Browse all CTA */}
+          <motion.div variants={item} className="text-center mt-12">
+            <Link href="/shop">
+              <motion.button
+                id="browse-all-products"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+                className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-semibold text-slate-300"
+                style={{
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  background: "rgba(255,255,255,0.04)",
+                  backdropFilter: "blur(12px)",
+                }}
+              >
+                Browse All Products
+                <ArrowRight className="h-4 w-4" />
+              </motion.button>
+            </Link>
+          </motion.div>
+        </SectionWrapper>
+      </div>
+    </section>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════════
 // ROOT PAGE
 // ════════════════════════════════════════════════════════════════════════════════
 
@@ -1520,6 +1606,9 @@ export default function Home() {
 
       <div className="section-divider" />
       <FeatureHighlights />
+
+      <div className="section-divider" />
+      <ProductsShowcase />
 
       <div className="section-divider" />
       <VendorDashboardPreview />
