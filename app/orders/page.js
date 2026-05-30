@@ -139,9 +139,11 @@ export default function Orders() {
                           </Link>
                           <p className="text-slate-400 text-sm mb-2">Qty: {item.quantity}</p>
                           <div className="flex gap-3 mt-4">
-                            <Link href={`/product/${item.id}`} className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition-colors">
-                              Leave Feedback
-                            </Link>
+                            {order.status === 'Delivered' && (
+                              <Link href={`/product/${item.id}`} className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition-colors">
+                                Leave Feedback
+                              </Link>
+                            )}
                           </div>
                         </div>
                       </div>

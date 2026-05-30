@@ -723,8 +723,14 @@ function MarketplaceShowcase() {
 
   useEffect(() => {
     getProducts().then((data) => {
+      // Sort by best-selling metrics (reviews/rating) to get true "Top Sellers"
+      const topSellers = [...data].sort((a, b) => {
+        const scoreA = (a.reviews || 0) * (a.rating || 0);
+        const scoreB = (b.reviews || 0) * (b.rating || 0);
+        return scoreB - scoreA;
+      });
       // Limit to 6 featured products for the landing page
-      setProducts(data.slice(0, 6));
+      setProducts(topSellers.slice(0, 6));
       setLoading(false);
     });
   }, []);
@@ -736,9 +742,9 @@ function MarketplaceShowcase() {
           <div className="text-center mb-16">
             <SectionPill>Marketplace</SectionPill>
             <motion.h2 variants={item} className="text-4xl md:text-6xl font-black tracking-tighter mb-4 text-white">
-              Shop the Future
+              Top Selling Products
             </motion.h2>
-            <motion.p variants={item} className="text-slate-400 text-lg max-w-xl mx-auto">
+            <motion.p variants={item} className="text-slate-400 text-lg max-w-xl mx-auto mb-12">
               Curated products from verified vendors. Premium quality, guaranteed.
             </motion.p>
           </div>
@@ -759,6 +765,34 @@ function MarketplaceShowcase() {
               ))}
             </motion.div>
           )}
+
+          {/* Animated Product Categories Display */}
+          <motion.div 
+            variants={item}
+            className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto mt-16 mb-8"
+          >
+            {[
+              { name: "Electronics", icon: "⚡", color: "from-blue-500/20 to-blue-500/5", border: "border-blue-500/30", text: "text-blue-300" },
+              { name: "Cyber-Wear", icon: "🦾", color: "from-purple-500/20 to-purple-500/5", border: "border-purple-500/30", text: "text-purple-300" },
+              { name: "Gaming", icon: "🎮", color: "from-green-500/20 to-green-500/5", border: "border-green-500/30", text: "text-green-300" },
+              { name: "Power", icon: "🔋", color: "from-yellow-500/20 to-yellow-500/5", border: "border-yellow-500/30", text: "text-yellow-300" },
+              { name: "Clothing", icon: "👕", color: "from-pink-500/20 to-pink-500/5", border: "border-pink-500/30", text: "text-pink-300" },
+              { name: "Home & Garden", icon: "🏡", color: "from-emerald-500/20 to-emerald-500/5", border: "border-emerald-500/30", text: "text-emerald-300" },
+            ].map((cat, i) => (
+              <motion.div
+                key={cat.name}
+                initial={{ opacity: 0, scale: 0.8, y: 15 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1, type: "spring", stiffness: 100 }}
+                whileHover={{ scale: 1.07, y: -3, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.5)" }}
+                className={`px-5 py-2.5 rounded-full border ${cat.border} bg-gradient-to-r ${cat.color} backdrop-blur-xl flex items-center gap-2.5 cursor-pointer transition-all duration-300 shadow-lg`}
+              >
+                <span className="text-lg">{cat.icon}</span>
+                <span className={`font-bold tracking-wide text-sm ${cat.text}`}>{cat.name}</span>
+              </motion.div>
+            ))}
+          </motion.div>
 
           <motion.div variants={item} className="text-center mt-12">
             <Link href="/shop">
@@ -1483,8 +1517,6 @@ export default function Home() {
       {/* Sections */}
       <HeroSection />
       <MarqueeStrip />
-
-      <MarketplaceShowcase />
 
       <div className="section-divider" />
       <FeatureHighlights />

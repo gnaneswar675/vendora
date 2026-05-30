@@ -39,7 +39,7 @@ export default function ProductDetail() {
     if (user && role === 'buyer' && product) {
       getUserOrders(user.uid).then(orders => {
         const hasBought = orders.some(order => 
-          order.items.some(item => item.id === product.id)
+          order.status === 'Delivered' && order.items.some(item => item.id === product.id)
         );
         setUserHasPurchased(hasBought);
       });
