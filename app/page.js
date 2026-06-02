@@ -61,32 +61,32 @@ const PRODUCTS = [
 ];
 
 const FEATURES = [
-  { icon: Zap,       title: "Lightning Fast",       desc: "Sub-second page loads powered by Next.js edge runtime and intelligent caching.",       color: "#3b82f6", bg: "rgba(59,130,246,0.08)"  },
-  { icon: Shield,    title: "Secure by Default",    desc: "End-to-end encryption, fraud detection, and PCI-DSS compliant payments.",            color: "#8b5cf6", bg: "rgba(139,92,246,0.08)" },
-  { icon: Globe,     title: "Global Network",       desc: "Reach buyers in 150+ countries with localised payments and smart shipping.",           color: "#06b6d4", bg: "rgba(6,182,212,0.08)"  },
-  { icon: TrendingUp,title: "Real-time Analytics",  desc: "Live dashboards with revenue insights, funnel tracking, and cohort analysis.",        color: "#10b981", bg: "rgba(16,185,129,0.08)" },
-  { icon: Layers,    title: "Multi-Vendor Ready",   desc: "Manage hundreds of vendors with role-based permissions and white-label storefronts.",  color: "#f59e0b", bg: "rgba(245,158,11,0.08)" },
-  { icon: Rocket,    title: "Scale Without Limits", desc: "Auto-scaling infrastructure that adapts to Black-Friday-level traffic instantly.",     color: "#ef4444", bg: "rgba(239,68,68,0.08)"  },
+  { icon: Zap, title: "Lightning Fast", desc: "Sub-second page loads powered by Next.js edge runtime and intelligent caching.", color: "#3b82f6", bg: "rgba(59,130,246,0.08)" },
+  { icon: Shield, title: "Secure by Default", desc: "End-to-end encryption, fraud detection, and PCI-DSS compliant payments.", color: "#8b5cf6", bg: "rgba(139,92,246,0.08)" },
+  { icon: Globe, title: "Global Network", desc: "Reach buyers in 150+ countries with localised payments and smart shipping.", color: "#06b6d4", bg: "rgba(6,182,212,0.08)" },
+  { icon: TrendingUp, title: "Real-time Analytics", desc: "Live dashboards with revenue insights, funnel tracking, and cohort analysis.", color: "#10b981", bg: "rgba(16,185,129,0.08)" },
+  { icon: Layers, title: "Multi-Vendor Ready", desc: "Manage hundreds of vendors with role-based permissions and white-label storefronts.", color: "#f59e0b", bg: "rgba(245,158,11,0.08)" },
+  { icon: Rocket, title: "Scale Without Limits", desc: "Auto-scaling infrastructure that adapts to Black-Friday-level traffic instantly.", color: "#ef4444", bg: "rgba(239,68,68,0.08)" },
 ];
 
 const TESTIMONIALS = [
-  { name: "Sarah Chen",     role: "Fashion Vendor · 2 yrs",    quote: "Vendora transformed my small boutique into a 6-figure business. The analytics alone are worth it.",         avatar: "SC", stars: 5 },
-  { name: "Marcus Williams",role: "Electronics Retailer",       quote: "The vendor dashboard is insane. I manage 400+ SKUs without ever feeling overwhelmed.",                       avatar: "MW", stars: 5 },
-  { name: "Priya Patel",    role: "Premium Buyer",              quote: "Best marketplace UI I've ever used. Finding exactly what I want is actually enjoyable now.",                  avatar: "PP", stars: 5 },
-  { name: "James Ford",     role: "Tech Vendor · Top 10",       quote: "Zero to ₹50K monthly in 8 months. Vendora's seller tools and built-in SEO are genuinely unmatched.",        avatar: "JF", stars: 5 },
+  { name: "Sarah Chen", role: "Fashion Vendor · 2 yrs", quote: "Vendora transformed my small boutique into a 6-figure business. The analytics alone are worth it.", avatar: "SC", stars: 5 },
+  { name: "Marcus Williams", role: "Electronics Retailer", quote: "The vendor dashboard is insane. I manage 400+ SKUs without ever feeling overwhelmed.", avatar: "MW", stars: 5 },
+  { name: "Priya Patel", role: "Premium Buyer", quote: "Best marketplace UI I've ever used. Finding exactly what I want is actually enjoyable now.", avatar: "PP", stars: 5 },
+  { name: "James Ford", role: "Tech Vendor · Top 10", quote: "Zero to ₹50K monthly in 8 months. Vendora's seller tools and built-in SEO are genuinely unmatched.", avatar: "JF", stars: 5 },
 ];
 
 const STEPS = [
-  { num: "01", title: "Create Account",   desc: "Sign up as a buyer or vendor in under 60 seconds. Choose your role and get started instantly — no credit card required.",          icon: Users  },
-  { num: "02", title: "Browse or List",   desc: "Discover thousands of curated products, or list your own with AI-powered descriptions and smart category matching.",              icon: Search },
-  { num: "03", title: "Transact Securely",desc: "Buy or sell with full confidence. Instant payouts, buyer protection, real-time tracking — commerce the way it should be.",       icon: Shield },
+  { num: "01", title: "Create Account", desc: "Sign up as a buyer or vendor in under 60 seconds. Choose your role and get started instantly — no credit card required.", icon: Users },
+  { num: "02", title: "Browse or List", desc: "Discover thousands of curated products, or list your own with AI-powered descriptions and smart category matching.", icon: Search },
+  { num: "03", title: "Transact Securely", desc: "Buy or sell with full confidence. Instant payouts, buyer protection, real-time tracking — commerce the way it should be.", icon: Shield },
 ];
 
 const STATS = [
-  { value: 2.4,  suffix: "M+", label: "GMV Processed",    prefix: "₹", color: "#3b82f6" },
-  { value: 50,   suffix: "K+", label: "Active Vendors",    prefix: "",  color: "#8b5cf6" },
-  { value: 1.2,  suffix: "M+", label: "Products Listed",   prefix: "",  color: "#06b6d4" },
-  { value: 98,   suffix: "%",  label: "Satisfaction Rate", prefix: "",  color: "#10b981" },
+  { value: 2.4, suffix: "M+", label: "GMV Processed", prefix: "₹", color: "#3b82f6" },
+  { value: 50, suffix: "K+", label: "Active Vendors", prefix: "", color: "#8b5cf6" },
+  { value: 1.2, suffix: "M+", label: "Products Listed", prefix: "", color: "#06b6d4" },
+  { value: 98, suffix: "%", label: "Satisfaction Rate", prefix: "", color: "#10b981" },
 ];
 
 const CHART_DATA = [
@@ -112,32 +112,32 @@ const TICKER_ITEMS = [
 const ease = [0.25, 0.46, 0.45, 0.94];
 
 const fadeUp = {
-  hidden:  { opacity: 0, y: 40 },
+  hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.75, ease } },
 };
 
 const stagger = {
-  hidden:  {},
+  hidden: {},
   visible: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } },
 };
 
 const staggerFast = {
-  hidden:  {},
+  hidden: {},
   visible: { transition: { staggerChildren: 0.06 } },
 };
 
 const item = {
-  hidden:  { opacity: 0, y: 32 },
+  hidden: { opacity: 0, y: 32 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease } },
 };
 
 const slideFromLeft = {
-  hidden:  { opacity: 0, x: -60 },
+  hidden: { opacity: 0, x: -60 },
   visible: { opacity: 1, x: 0, transition: { duration: 0.85, ease } },
 };
 
 const slideFromRight = {
-  hidden:  { opacity: 0, x: 60 },
+  hidden: { opacity: 0, x: 60 },
   visible: { opacity: 1, x: 0, transition: { duration: 0.85, ease } },
 };
 
@@ -270,9 +270,9 @@ function HeroSection() {
   const sY = useSpring(mouseY, springCfg);
 
   // Parallax transforms for floating cards
-  const leftCardX  = useTransform(sX, [-700, 700], [-22, 22]);
+  const leftCardX = useTransform(sX, [-700, 700], [-22, 22]);
   const rightCardX = useTransform(sX, [-700, 700], [22, -22]);
-  const cardY      = useTransform(sY, [-500, 500], [-14, 14]);
+  const cardY = useTransform(sY, [-500, 500], [-14, 14]);
 
   // Scroll-based parallax for the hero content
   const { scrollY } = useScroll();
@@ -280,12 +280,12 @@ function HeroSection() {
 
   const handleMouseMove = useCallback((e) => {
     const r = e.currentTarget.getBoundingClientRect();
-    mouseX.set(e.clientX - r.left - r.width  / 2);
-    mouseY.set(e.clientY - r.top  - r.height / 2);
+    mouseX.set(e.clientX - r.left - r.width / 2);
+    mouseY.set(e.clientY - r.top - r.height / 2);
   }, [mouseX, mouseY]);
 
   const wordVariant = {
-    hidden:  { opacity: 0, y: 80, rotateX: -20 },
+    hidden: { opacity: 0, y: 80, rotateX: -20 },
     visible: (i) => ({
       opacity: 1, y: 0, rotateX: 0,
       transition: { duration: 0.95, ease, delay: i * 0.13 },
@@ -442,10 +442,10 @@ function HeroSection() {
           className="flex items-center justify-center gap-6 flex-wrap"
         >
           {[
-            { label: "50K+ Vendors",    dot: "#3b82f6" },
-            { label: "1.2M Products",   dot: "#8b5cf6" },
-            { label: "₹2.4M+ GMV",      dot: "#06b6d4" },
-            { label: "98% Satisfaction",dot: "#10b981" },
+            { label: "50K+ Vendors", dot: "#3b82f6" },
+            { label: "1.2M Products", dot: "#8b5cf6" },
+            { label: "₹2.4M+ GMV", dot: "#06b6d4" },
+            { label: "98% Satisfaction", dot: "#10b981" },
           ].map(({ label, dot }, i) => (
             <div key={i} className="flex items-center gap-2">
               <div className="h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ background: dot }} />
@@ -529,9 +529,9 @@ function HeroSection() {
           </div>
           <div className="space-y-2.5">
             {[
-              { name: "Neural Headset Pro",  price: "₹299", dot: "#3b82f6" },
-              { name: "Quantum Watch X",     price: "₹599", dot: "#8b5cf6" },
-              { name: "Arc Keyboard MK2",    price: "₹189", dot: "#06b6d4" },
+              { name: "Neural Headset Pro", price: "₹299", dot: "#3b82f6" },
+              { name: "Quantum Watch X", price: "₹599", dot: "#8b5cf6" },
+              { name: "Arc Keyboard MK2", price: "₹189", dot: "#06b6d4" },
             ].map((order, i) => (
               <motion.div
                 key={i}
@@ -662,9 +662,8 @@ function ProductCard({ product, index }) {
           }}
         >
           <Heart
-            className={`h-3.5 w-3.5 transition-all duration-200 ${
-              liked ? "fill-white text-white scale-110" : "text-slate-400"
-            }`}
+            className={`h-3.5 w-3.5 transition-all duration-200 ${liked ? "fill-white text-white scale-110" : "text-slate-400"
+              }`}
           />
         </button>
       </div>
@@ -683,11 +682,10 @@ function ProductCard({ product, index }) {
           {[...Array(5)].map((_, j) => (
             <Star
               key={j}
-              className={`h-3 w-3 ${
-                j < Math.floor(product.rating)
-                  ? "text-yellow-400 fill-yellow-400"
-                  : "text-slate-800"
-              }`}
+              className={`h-3 w-3 ${j < Math.floor(product.rating)
+                ? "text-yellow-400 fill-yellow-400"
+                : "text-slate-800"
+                }`}
             />
           ))}
           <span className="text-slate-500 text-[11px] ml-1">
@@ -767,7 +765,7 @@ function MarketplaceShowcase() {
           )}
 
           {/* Animated Product Categories Display */}
-          <motion.div 
+          <motion.div
             variants={item}
             className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto mt-16 mb-8"
           >
@@ -943,9 +941,9 @@ function DashboardMockup() {
       {/* Stats cards */}
       <div className="grid grid-cols-3 gap-3 mb-5">
         {[
-          { label: "Revenue",  value: "₹38,200", delta: "+22%",  color: "#3b82f6" },
-          { label: "Orders",   value: "284",     delta: "+14%",  color: "#8b5cf6" },
-          { label: "Rating",   value: "4.9 ★",   delta: "Top 5%",color: "#10b981" },
+          { label: "Revenue", value: "₹38,200", delta: "+22%", color: "#3b82f6" },
+          { label: "Orders", value: "284", delta: "+14%", color: "#8b5cf6" },
+          { label: "Rating", value: "4.9 ★", delta: "Top 5%", color: "#10b981" },
         ].map((s, i) => (
           <div
             key={i}
@@ -977,8 +975,8 @@ function DashboardMockup() {
               <AreaChart data={CHART_DATA} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="rev" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%"  stopColor="#3b82f6" stopOpacity={0.35} />
-                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}    />
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.35} />
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <Tooltip
@@ -1013,8 +1011,8 @@ function DashboardMockup() {
         <div className="space-y-1.5">
           {[
             { name: "Neural Headset Pro", status: "Delivered", amount: "$299", s: "emerald" },
-            { name: "Quantum Watch X",    status: "Shipped",   amount: "$599", s: "blue"    },
-            { name: "Arc Keyboard MK2",   status: "Processing",amount: "$189", s: "yellow"  },
+            { name: "Quantum Watch X", status: "Shipped", amount: "$599", s: "blue" },
+            { name: "Arc Keyboard MK2", status: "Processing", amount: "$189", s: "yellow" },
           ].map((o, i) => (
             <div
               key={i}
@@ -1023,13 +1021,12 @@ function DashboardMockup() {
             >
               <span className="text-[11px] text-slate-300 flex-1 truncate">{o.name}</span>
               <span
-                className={`text-[10px] px-2 py-0.5 rounded-full font-semibold flex-shrink-0 ${
-                  o.s === "emerald"
-                    ? "text-emerald-400 bg-emerald-400/10"
-                    : o.s === "blue"
+                className={`text-[10px] px-2 py-0.5 rounded-full font-semibold flex-shrink-0 ${o.s === "emerald"
+                  ? "text-emerald-400 bg-emerald-400/10"
+                  : o.s === "blue"
                     ? "text-blue-400 bg-blue-400/10"
                     : "text-yellow-400 bg-yellow-400/10"
-                }`}
+                  }`}
               >
                 {o.status}
               </span>
@@ -1602,13 +1599,12 @@ export default function Home() {
 
       {/* Sections */}
       <HeroSection />
-      <MarqueeStrip />
 
       <div className="section-divider" />
       <FeatureHighlights />
 
       <div className="section-divider" />
-      <ProductsShowcase />
+
 
       <div className="section-divider" />
       <VendorDashboardPreview />
