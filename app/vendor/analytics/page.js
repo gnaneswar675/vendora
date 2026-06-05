@@ -1,19 +1,23 @@
 "use client";
 import { useState, useEffect } from 'react';
+import { useAuth } from '@/lib/auth';
 import { getVendorStats } from '@/lib/api';
 import { motion } from 'framer-motion';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 
 export default function VendorAnalytics() {
+  const { user } = useAuth();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getVendorStats().then(data => {
-      setStats(data);
-      setLoading(false);
-    });
-  }, []);
+    if (user) {
+      getVendorStats(user.uid).then(data => {
+        setStats(data);
+        setLoading(false);
+      });
+    }
+  }, [user]);
 
   if (loading) {
     return (
@@ -48,7 +52,7 @@ export default function VendorAnalytics() {
         >
           <h2 className="text-xl font-bold mb-6">Revenue Growth</h2>
           <div className="h-[400px] w-full">
-            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+            <ResponsiveContainer width="100%" height={400} minWidth={0}>
               <AreaChart data={stats.revenueData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
@@ -77,7 +81,7 @@ export default function VendorAnalytics() {
         >
           <h2 className="text-xl font-bold mb-6">Orders vs Returns</h2>
           <div className="h-[400px] w-full">
-            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+            <ResponsiveContainer width="100%" height={400} minWidth={0}>
               <BarChart data={stats.revenueData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
                 <XAxis dataKey="name" stroke="#94a3b8" axisLine={false} tickLine={false} />

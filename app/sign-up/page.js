@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, Lock, Mail, User } from 'lucide-react';
+import { ArrowRight, Lock, Mail, User, Check } from 'lucide-react';
 
 function SignUpForm() {
   const router = useRouter();
@@ -18,25 +18,51 @@ function SignUpForm() {
   const [password, setPassword] = useState('');
   const [storeName, setStoreName] = useState('');
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
   
   const handleSignUp = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccessMessage('');
     setLoading(true);
     try {
       // Pass the storeName as part of the name if they are a vendor for simplicity right now
       const displayName = role === 'vendor' ? `${name} (${storeName})` : name;
-      await signup(email, password, displayName, role);
-      // Let the AuthProvider load the role and handle redirect, or do it here
-      if (role === 'admin') router.push('/admin/dashboard');
-      else if (role === 'vendor') router.push('/vendor/dashboard');
-      else router.push('/shop');
+      const result = await signup(email, password, displayName, role);
+      
+      if (result && !result.sessionConfirmed) {
+        setSuccessMessage('Please check your email to verify and confirm your account before logging in.');
+      } else {
+        // Let the AuthProvider load the role and handle redirect, or do it here
+        if (role === 'admin') router.push('/admin/dashboard');
+        else if (role === 'vendor') router.push('/vendor/dashboard');
+        else router.push('/shop');
+      }
     } catch (err) {
       setError(err.message || 'Failed to create an account.');
     }
     setLoading(false);
   };
+
+  if (successMessage) {
+    return (
+      <div className="text-center py-6 space-y-4">
+        <div className="h-16 w-16 bg-emerald-500/10 border border-emerald-500/30 rounded-full flex items-center justify-center mx-auto mb-2 animate-pulse">
+          <Check className="h-8 w-8 text-emerald-400" />
+        </div>
+        <h2 className="text-2xl font-bold text-white">Verification Required</h2>
+        <p className="text-slate-400 text-xs max-w-sm mx-auto leading-relaxed">
+          {successMessage}
+        </p>
+        <div className="pt-4">
+          <Link href={`/sign-in?role=${role}`} className="inline-block px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-bold transition-all text-sm">
+            Proceed to Sign In
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -64,7 +90,40 @@ function SignUpForm() {
         </button>
       </div>
 
-      {error && <div className="bg-red-500/10 border border-red-500/50 text-red-400 p-3 rounded-xl mb-6 text-sm">{error}</div>}
+      {error && (
+        error.toLowerCase().includes('rate limit') ? (
+          <div className="bg-amber-500/10 border border-amber-500/40 text-amber-300 p-4 rounded-xl mb-6 text-xs leading-relaxed space-y-2">
+            <div className="flex items-center gap-2 text-sm font-semibold text-amber-200">
+              <span className="flex h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
+              Supabase Email Rate Limit Exceeded
+            </div>
+            <p>
+              Supabase restricts the number of signup attempts (typically 3/hour on the default SMTP testing server) to prevent spam.
+            </p>
+            <div className="pt-1 border-t border-slate-700/50 space-y-1">
+              <span className="font-semibold text-amber-200 block mb-1">How to fix this in your Supabase Dashboard:</span>
+              <ul className="list-disc pl-4 space-y-1">
+                <li>
+                  <strong className="text-white">Option A (Fastest for Dev):</strong> Go to <span className="font-mono bg-slate-900 px-1 py-0.5 rounded text-[10px]">Auth &gt; Providers &gt; Email</span> and disable <strong className="text-white">Confirm Email</strong>. This allows signing up instantly without sending verification emails.
+                </li>
+                <li>
+                  <strong className="text-white">Option B (SMTP):</strong> Configure a custom SMTP provider in <span className="font-mono bg-slate-900 px-1 py-0.5 rounded text-[10px]">Project Settings &gt; Auth &gt; SMTP Settings</span> (e.g. Resend, SendGrid) to remove default limits.
+                </li>
+                <li>
+                  <strong className="text-white">Option C (Rate Limits):</strong> Go to <span className="font-mono bg-slate-900 px-1 py-0.5 rounded text-[10px]">Auth &gt; Rate Limits</span> to adjust limits.
+                </li>
+              </ul>
+            </div>
+            <p className="text-[11px] text-slate-400 italic pt-1">
+              Tip: While developing, you can also try using a different email address or wait a few minutes before trying again.
+            </p>
+          </div>
+        ) : (
+          <div className="bg-red-500/10 border border-red-500/50 text-red-400 p-3 rounded-xl mb-6 text-sm">
+            {error}
+          </div>
+        )
+      )}
 
       <form onSubmit={handleSignUp} className="space-y-4">
         <div>

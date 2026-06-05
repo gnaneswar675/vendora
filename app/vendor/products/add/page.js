@@ -4,9 +4,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowLeft, UploadCloud, Save } from 'lucide-react';
-import { addProduct } from '@/lib/api';
+import { addProduct, uploadProductImage } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
-// Removed firebase storage imports since we are using Cloudinary now
 
 export default function AddProduct() {
   const router = useRouter();
@@ -91,38 +90,12 @@ export default function AddProduct() {
         throw new Error("Please select an image for your product.");
       }
 
-      let imageUrl = '';
-
       console.log("Starting image upload to Cloudinary...");
-
-      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
-
-      if (!cloudName || !uploadPreset) {
-        throw new Error("ERROR: Missing Cloudinary environment variables. Please restart your Next.js server!");
-      }
-
-      const formData = new FormData();
-      formData.append('file', imageFile);
-      formData.append('upload_preset', uploadPreset);
-      formData.append('folder', 'vendora/products'); // Organizes images into a specific folder in Cloudinary
-
-      const uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!uploadResponse.ok) {
-        const errorData = await uploadResponse.json();
-        throw new Error(errorData.error?.message || "Cloudinary upload failed");
-      }
-
-      const uploadData = await uploadResponse.json();
-      imageUrl = uploadData.secure_url;
+      const imageUrl = await uploadProductImage(imageFile);
       console.log("Image uploaded successfully to Cloudinary:", imageUrl);
 
-      console.log("Saving product to Firestore...");
-      // 2. Save Product to Firestore
+      console.log("Saving product to database...");
+      // Save Product to database
       await withTimeout(
         addProduct({
           title,
@@ -137,7 +110,7 @@ export default function AddProduct() {
           reviews: 0
         }),
         10000,
-        "Firestore Save Timeout: Please ensure Firestore Database is enabled in your Firebase Console."
+        "Database Save Timeout: Please ensure Supabase database is connected."
       );
 
       console.log("Product saved successfully! Redirecting...");
