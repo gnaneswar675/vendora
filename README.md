@@ -4,7 +4,8 @@
 
 ![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=nextdotjs)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white)
 ![Framer Motion](https://img.shields.io/badge/Framer%20Motion-black?style=for-the-badge)
 
@@ -30,7 +31,8 @@ Built with scalability, performance, and modern web technologies in mind, Vendor
 - 🔎 Product discovery and search
 - 🛒 Shopping cart functionality
 - 📋 Order management system
-- ⚡ Real-time Firestore integration
+- ⚡ Real-time Supabase integration
+- ☁️ Cloudinary-powered image management
 - 📱 Responsive across all devices
 - 🎨 Modern motion-driven interface
 
@@ -46,8 +48,12 @@ Built with scalability, performance, and modern web technologies in mind, Vendor
 - Framer Motion
 
 ### Backend Services
-- Firebase Authentication
-- Firebase Firestore
+- Supabase Auth
+- PostgreSQL
+- Supabase Realtime
+
+### Media Storage
+- Cloudinary
 
 ### Deployment
 - Vercel
